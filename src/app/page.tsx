@@ -3,15 +3,7 @@
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { createHash } from "crypto";
-
-// Convert wallet address to integer
-export function walletAddressToInt(walletAddress: string): number {
-  const hash = createHash("sha256").update(walletAddress).digest("hex");
-  const bigInt = BigInt("0x" + hash);
-  const number = bigInt % BigInt(Number.MAX_SAFE_INTEGER);
-  return Number(number);
-}
+import { walletAddressToInt } from "./utils/walletconv";
 
 const Page = () => {
   const { publicKey } = useWallet(); // Get the wallet public key

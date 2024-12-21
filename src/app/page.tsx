@@ -153,7 +153,7 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "10px",
     padding: "10px",
-    height: "400px",
+    height: "600px",
     overflowY: "scroll" as "scroll",
     backgroundColor: "#ffffff",
   },

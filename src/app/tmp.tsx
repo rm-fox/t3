@@ -1,21 +1,54 @@
 
 // "use client";
 
-// import { useState } from "react";
+// // import { useState } from "react";
+// import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+// import { useEffect, useState } from "react";
+// import { useWallet } from "@solana/wallet-adapter-react";
+// import { createHash } from "crypto";
+
+// // Convert wallet address to integer
+// export function walletAddressToInt(walletAddress: string): number {
+//   const hash = createHash("sha256").update(walletAddress).digest("hex");
+//   const bigInt = BigInt("0x" + hash);
+//   const number = bigInt % BigInt(Number.MAX_SAFE_INTEGER);
+//   return Number(number);
+// }
 
 // const Page = () => {
+//   const { publicKey } = useWallet(); // Get the wallet public key
+
 //   const [messages, setMessages] = useState([]); // Chat messages
 //   const [currentInput, setCurrentInput] = useState(""); // User input
 //   const [loading, setLoading] = useState(false); // Loading state
 //   const [error, setError] = useState(null); // Error state
+//   const [isClient, setIsClient] = useState(false);
+
+//   useEffect(() => {
+//     setIsClient(true);
+//   }, []);
 
 //   const handleSendMessage = async () => {
+//     const [error, setError] = useState<string | null>(null); // Allow error to be a string or null
+
+//     if (!publicKey) {
+//       setError("No wallet connected"); // No TypeScript error now
+//       return;
+//     }
+    
+//     const walletAddress = publicKey.toString();
+//     const walletInt = walletAddressToInt(walletAddress);
+//     console.log(walletInt);
+    
 //     if (!currentInput.trim()) return; // Prevent empty input
 
 //     const userMessage = { sender: "user", text: currentInput }; // Add user message
+//     const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]); // Specify the type
+
 //     setMessages((prev) => [...prev, userMessage]);
 //     setCurrentInput(""); // Clear input
 //     setLoading(true); // Start loading
+//     setError(null);
 
 //     try {
 //       const response = await fetch("/api/generate", {
@@ -26,7 +59,7 @@
 //         },
 //         body: JSON.stringify({
 //           question: currentInput, // Send user input to the API
-//           thread_id: 1,
+//           thread_id: walletInt,
 //         }),
 //       });
 
@@ -40,61 +73,72 @@
 //       const botMessage = { sender: "bot", text: content }; // Add bot message
 //       setMessages((prev) => [...prev, botMessage]);
 //     } catch (error) {
-//       setMessages((prev) => [
-//         ...prev,
-//         { sender: "bot", text: `Error: ${error.message}` },
-//       ]);
+//         const errorMessage = (error as Error).message || "Unknown error occurred";
+//         setMessages((prev) => [
+//             ...prev,
+//             { sender: "bot", text: `Error: ${errorMessage}` },
+//         ]);
 //     } finally {
 //       setLoading(false); // Stop loading
 //     }
 //   };
 
-//   const handleSubmit = (event) => {
+//   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 //     event.preventDefault(); // Prevent page reload
 //     handleSendMessage(); // Send message
 //   };
+//   if (!isClient) {
+//     return null; // Return null while the component is not mounted on the client
+//   }
+// //   const handleSubmit = (event) => {
+// //     event.preventDefault(); // Prevent page reload
+// //     handleSendMessage(); // Send message
+// //   };
 
 //   return (
-//     <div style={styles.container}>
-//       <h1 style={styles.header}>Risk Manager</h1>
-//       <div style={styles.chatBox}>
-//         {messages.map((msg, index) => (
-//           <div
-//             key={index}
-//             style={{
-//               ...styles.messageContainer,
-//               justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-//             }}
-//           >
+//     <div>
+//         <WalletMultiButton />
+//         <div style={styles.container}>
+//         <h1 style={styles.header}>Risk Manager</h1>
+//         <div style={styles.chatBox}>
+//             {messages.map((msg, index) => (
 //             <div
-//               style={{
-//                 ...styles.messageBubble,
-//                 backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
-//                 color: msg.sender === "user" ? "#0f5132" : "#842029",
-//               }}
+//                 key={index}
+//                 style={{
+//                 ...styles.messageContainer,
+//                 justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+//                 }}
 //             >
-//               {msg.text}
+//                 <div
+//                 style={{
+//                     ...styles.messageBubble,
+//                     backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
+//                     color: msg.sender === "user" ? "#0f5132" : "#842029",
+//                 }}
+//                 >
+//                 {msg.text}
+//                 </div>
 //             </div>
-//           </div>
-//         ))}
-//         {loading && (
-//           <div style={styles.loading}>Bot is typing...</div>
-//         )}
-//       </div>
-//       <form onSubmit={handleSubmit} style={styles.inputForm}>
-//         <input
-//           type="text"
-//           value={currentInput}
-//           onChange={(e) => setCurrentInput(e.target.value)}
-//           placeholder="Type your message..."
-//           required
-//           style={styles.inputField}
-//         />
-//         <button type="submit" style={styles.sendButton}>
-//           Send
-//         </button>
-//       </form>
-//       {error && <div style={styles.error}>Error: {error}</div>}
+//             ))}
+//             {loading && (
+//             <div style={styles.loading}>Bot is typing...</div>
+//             )}
+//         </div>
+//         <form onSubmit={handleSubmit} style={styles.inputForm}>
+//             <input
+//             type="text"
+//             value={currentInput}
+//             onChange={(e) => setCurrentInput(e.target.value)}
+//             placeholder="Type your message..."
+//             required
+//             style={styles.inputField}
+//             />
+//             <button type="submit" style={styles.sendButton}>
+//             Send
+//             </button>
+//         </form>
+//         {error && <div style={styles.error}>Error: {error}</div>}
+//         </div>
 //     </div>
 //   );
 // };

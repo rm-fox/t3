@@ -13,6 +13,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [isClient, setIsClient] = useState(false); // Track if component is mounted
+  const [sideContent, setSideContent] = useState("Welcome to Risk Manager!"); // Initial side content
 
   useEffect(() => {
     setIsClient(true);
@@ -26,7 +27,6 @@ const Page = () => {
 
     const walletAddress = publicKey.toString();
     const walletInt = walletAddressToInt(walletAddress);
-    // console.log(walletInt);
 
     if (!currentInput.trim()) return; // Prevent empty input
 
@@ -53,12 +53,25 @@ const Page = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-      const content = data.result[0]?.assistant?.messages?.content || "No content available";
+      console.log(data)
+      const content = 
+          data.result[0]?.assistant?.messages?.content || 
+          data.result[1]?.assistant?.messages?.content || 
+          data.result[2]?.assistant?.messages?.content || 
+          "No content available";
+
 
       const botMessage = { sender: "bot", text: content };
       setMessages((prev) => [...prev, botMessage]);
+
+      // Update side content with part of the bot reply
+      if (content.includes("user address")) {
+        setSideContent(`Address: ${walletAddress}`);
+      } else {
+        setSideContent(content.slice(0, 100)); // Show the first 100 characters of the reply
+      }
     } catch (error) {
       const errorMessage = (error as Error).message || "Unknown error occurred";
       setMessages((prev) => [
@@ -80,60 +93,94 @@ const Page = () => {
   }
 
   return (
-    <div>
+    <div style={styles.page}>
       <WalletMultiButton />
       <div style={styles.container}>
-        <h1 style={styles.header}>Risk Manager</h1>
-        <div style={styles.chatBox}>
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{
-                ...styles.messageContainer,
-                justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-              }}
-            >
+        {/* Left Column */}
+        <div style={styles.leftColumn}>
+          <div style={styles.sideContent}>{sideContent}</div>
+        </div>
+
+        {/* Right Column */}
+        <div style={styles.rightColumn}>
+          <h1 style={styles.header}>Risk Manager</h1>
+          <div style={styles.chatBox}>
+            {messages.map((msg, index) => (
               <div
+                key={index}
                 style={{
-                  ...styles.messageBubble,
-                  backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
-                  color: msg.sender === "user" ? "#0f5132" : "#842029",
+                  ...styles.messageContainer,
+                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                 }}
               >
-                {msg.text}
+                <div
+                  style={{
+                    ...styles.messageBubble,
+                    backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
+                    color: msg.sender === "user" ? "#0f5132" : "#842029",
+                  }}
+                >
+                  {msg.text}
+                </div>
               </div>
-            </div>
-          ))}
-          {loading && <div style={styles.loading}>Bot is typing...</div>}
+            ))}
+            {loading && <div style={styles.loading}>Bot is typing...</div>}
+          </div>
+          <form onSubmit={handleSubmit} style={styles.inputForm}>
+            <input
+              type="text"
+              value={currentInput}
+              onChange={(e) => setCurrentInput(e.target.value)}
+              placeholder="Type your message..."
+              required
+              style={styles.inputField}
+            />
+            <button type="submit" style={styles.sendButton}>
+              Send
+            </button>
+          </form>
+          {error && <div style={styles.error}>Error: {error}</div>}
         </div>
-        <form onSubmit={handleSubmit} style={styles.inputForm}>
-          <input
-            type="text"
-            value={currentInput}
-            onChange={(e) => setCurrentInput(e.target.value)}
-            placeholder="Type your message..."
-            required
-            style={styles.inputField}
-          />
-          <button type="submit" style={styles.sendButton}>
-            Send
-          </button>
-        </form>
-        {error && <div style={styles.error}>Error: {error}</div>}
       </div>
     </div>
   );
 };
 
 const styles = {
-  container: {
-    maxWidth: "600px",
-    margin: "20px auto",
+  page: {
     fontFamily: "Arial, sans-serif",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "row" as "row",
+    maxWidth: "1200px",
+    margin: "20px auto",
+    gap: "20px",
+  },
+  leftColumn: {
+    flex: 1,
     backgroundColor: "#f8f9fa",
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     padding: "20px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sideContent: {
+    textAlign: "center" as "center",
+    color: "#6c757d",
+    fontSize: "18px",
+    lineHeight: "1.5",
+  },
+  rightColumn: {
+    flex: 2,
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column" as "column",
   },
   header: {
     textAlign: "center" as "center",
@@ -196,6 +243,3 @@ const styles = {
 };
 
 export default Page;
-
-
-

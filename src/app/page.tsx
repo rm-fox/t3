@@ -1,146 +1,45 @@
 "use client";
 
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { walletAddressToInt } from "./utils/walletconv";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import logo from "./components/logo.png"; // Adjust the path to your logo if needed
 
-const Page = () => {
-  const { publicKey } = useWallet(); // Get the wallet public key
-
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]); // Chat messages
-  const [currentInput, setCurrentInput] = useState(""); // User input
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
-  const [isClient, setIsClient] = useState(false); // Track if component is mounted
-  const [sideContent, setSideContent] = useState("Welcome to Risk Manager!"); // Initial side content
+const MainPage = () => {
+  const router = useRouter();
+  const [typedText, setTypedText] = useState(""); // State to hold the dynamically typed text
+  const fullText = "Collateral, liquified - trade any asset and earn stake on your loan.";
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const handleSendMessage = async () => {
-    if (!publicKey) {
-      setError("No wallet connected");
-      return;
-    }
-
-    const walletAddress = publicKey.toString();
-    const walletInt = walletAddressToInt(walletAddress);
-
-    if (!currentInput.trim()) return; // Prevent empty input
-
-    const userMessage = { sender: "user", text: currentInput };
-    setMessages((prev) => [...prev, userMessage]);
-    setCurrentInput(""); // Clear input
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: currentInput, // Send user input to the API
-          wallet_address: walletAddress,
-          thread_id: walletInt,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log(data)
-      const content = 
-          data.result[0]?.assistant?.messages?.content || 
-          data.result[1]?.assistant?.messages?.content || 
-          data.result[2]?.assistant?.messages?.content || 
-          "No content available";
-
-
-      const botMessage = { sender: "bot", text: content };
-      setMessages((prev) => [...prev, botMessage]);
-
-      // Update side content with part of the bot reply
-      if (content.includes("user address")) {
-        setSideContent(`Address: ${walletAddress}`);
+    let charIndex = 0; // Index of the current character being typed
+    const typingInterval = setInterval(() => {
+      if (charIndex < fullText.length) {
+        const currentChar = fullText[charIndex]; // Get current character
+        if (currentChar !== undefined) {
+          setTypedText((prev) => prev + currentChar); // Append the character
+          charIndex++;
+        }
       } else {
-        setSideContent(content.slice(0, 100)); // Show the first 100 characters of the reply
+        clearInterval(typingInterval); // Clear interval when typing is complete
       }
-    } catch (error) {
-      const errorMessage = (error as Error).message || "Unknown error occurred";
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: `Error: ${errorMessage}` },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    }, 15); // Typing speed in milliseconds
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent page reload
-    handleSendMessage(); // Send message
-  };
-
-  if (!isClient) {
-    return null; // Return null while the component is not mounted on the client
-  }
+    return () => clearInterval(typingInterval); // Cleanup on component unmount
+  }, [fullText]);
 
   return (
     <div style={styles.page}>
-      <WalletMultiButton />
-      <div style={styles.container}>
-        {/* Left Column */}
-        <div style={styles.leftColumn}>
-          <div style={styles.sideContent}>{sideContent}</div>
-        </div>
-
-        {/* Right Column */}
-        <div style={styles.rightColumn}>
-          <h1 style={styles.header}>Risk Manager</h1>
-          <div style={styles.chatBox}>
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                style={{
-                  ...styles.messageContainer,
-                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    ...styles.messageBubble,
-                    backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
-                    color: msg.sender === "user" ? "#0f5132" : "#842029",
-                  }}
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            {loading && <div style={styles.loading}>Bot is typing...</div>}
-          </div>
-          <form onSubmit={handleSubmit} style={styles.inputForm}>
-            <input
-              type="text"
-              value={currentInput}
-              onChange={(e) => setCurrentInput(e.target.value)}
-              placeholder="Type your message..."
-              required
-              style={styles.inputField}
-            />
-            <button type="submit" style={styles.sendButton}>
-              Send
-            </button>
-          </form>
-          {error && <div style={styles.error}>Error: {error}</div>}
-        </div>
+      <div style={styles.logoWrapper}>
+        <Image src={logo} alt="Website Logo" style={styles.logo} />
+      </div>
+      <p style={styles.description}>{typedText}</p> {/* Dynamically typed text */}
+      <div style={styles.buttonContainer}>
+        <button onClick={() => router.push("/trading")} style={styles.button}>
+          Trade
+        </button>
+        <button onClick={() => router.push("/aboutus")} style={styles.button}>
+          About Us
+        </button>
       </div>
     </div>
   );
@@ -149,97 +48,148 @@ const Page = () => {
 const styles = {
   page: {
     fontFamily: "Arial, sans-serif",
-  },
-  container: {
-    display: "flex",
-    flexDirection: "row" as "row",
-    maxWidth: "1200px",
-    margin: "20px auto",
-    gap: "20px",
-  },
-  leftColumn: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  sideContent: {
-    textAlign: "center" as "center",
-    color: "#6c757d",
-    fontSize: "18px",
-    lineHeight: "1.5",
-  },
-  rightColumn: {
-    flex: 2,
-    backgroundColor: "#ffffff",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
+    height: "100vh",
     display: "flex",
     flexDirection: "column" as "column",
-  },
-  header: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000000", // Black background
     textAlign: "center" as "center",
-    color: "#0d6efd",
+    color: "#ffffff", // White text for contrast
+  },
+  logoWrapper: {
     marginBottom: "20px",
-    fontSize: "24px",
-    fontWeight: "bold",
   },
-  chatBox: {
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    padding: "10px",
-    height: "600px",
-    overflowY: "scroll" as "scroll",
-    backgroundColor: "#ffffff",
+  logo: {
+    width: "400px",
+    height: "400px",
   },
-  messageContainer: {
+  description: {
+    fontSize: "20px",
+    marginBottom: "50px",
+    color: "#ffffff", // White text for description
+    height: "30px", // Height to prevent layout shifting
+    overflow: "hidden", // Prevent overflow during typing
+    whiteSpace: "nowrap", // Prevent text wrapping
+  },
+  buttonContainer: {
     display: "flex",
-    marginBottom: "10px",
+    gap: "60px",
   },
-  messageBubble: {
-    padding: "10px 15px",
-    borderRadius: "15px",
-    maxWidth: "70%",
-    wordWrap: "break-word" as "break-word",
-  },
-  loading: {
-    textAlign: "center" as "center",
-    color: "#6c757d",
-    fontStyle: "italic",
-  },
-  inputForm: {
-    display: "flex",
-    marginTop: "10px",
-  },
-  inputField: {
-    flex: 1,
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    backgroundColor: "#f1f1f1",
-    color: "#333",
-  },
-  sendButton: {
-    marginLeft: "10px",
-    padding: "10px 15px",
-    borderRadius: "5px",
+  button: {
+    padding: "10px 30px",
     border: "none",
-    backgroundColor: "#0d6efd",
-    color: "#fff",
-    fontSize: "16px",
+    borderRadius: "5px",
+    fontSize: "18px",
     cursor: "pointer",
-  },
-  error: {
-    marginTop: "10px",
-    color: "#842029",
-    textAlign: "center" as "center",
+    backgroundColor: "#6c63ff",
+    color: "#fff",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
   },
 };
 
-export default Page;
+export default MainPage;
+
+
+
+
+
+// // /src/app/page.tsx
+// import React from 'react';
+
+// const HomePage = () => {
+//   return <div>Welcome to the Home Page!</div>;
+// };
+
+// export default HomePage; // Default export
+
+
+
+// "use client";
+
+// import React, { useState, useEffect } from "react";
+// import Image from "next/image";
+// import { useRouter } from "next/navigation";
+// import logo from "./components/logo.png"; // Adjust the path to your logo
+
+// const MainPage = () => {
+//   const router = useRouter();
+//   const [typedText, setTypedText] = useState(""); // State to hold the dynamically typed text
+//   const fullText = "Collateral, liquified - trade any asset and earn stake on your loan ";
+
+//   useEffect(() => {
+//     let charIndex = 0; // Index of the current character being typed
+//     const typingInterval = setInterval(() => {
+//       if (charIndex < fullText.length) {
+//         setTypedText((prev) => prev + fullText[charIndex]);
+//         charIndex++;
+//       } else {
+//         clearInterval(typingInterval); // Clear interval when typing is complete
+//       }
+//     }, 15); // Typing speed in milliseconds
+
+//     return () => clearInterval(typingInterval); // Cleanup on component unmount
+//   }, []);
+
+//   return (
+//     <div style={styles.page}>
+//       <div style={styles.logoWrapper}>
+//         <Image src={logo} alt="Website Logo" style={styles.logo} />
+//       </div>
+//       <p style={styles.description}>{typedText}</p> {/* Dynamically typed text */}
+//       <div style={styles.buttonContainer}>
+//         <button onClick={() => router.push("/Trade")} style={styles.button}>
+//           Trade
+//         </button>
+//         <button onClick={() => router.push("/AboutUs")} style={styles.button}>
+//           About Us
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const styles = {
+//   page: {
+//     fontFamily: "Arial, sans-serif",
+//     height: "100vh",
+//     display: "flex",
+//     flexDirection: "column" as "column",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#000000", // Black background
+//     textAlign: "center" as "center",
+//     color: "#ffffff", // White text for contrast
+//   },
+//   logoWrapper: {
+//     marginBottom: "0px",
+//   },
+//   logo: {
+//     width: "400px",
+//     height: "400px",
+//   },
+//   description: {
+//     fontSize: "20px",
+//     marginBottom: "50px",
+//     color: "#ffffff", // White text for description
+//     height: "30px", // Height to prevent layout shifting
+//     overflow: "hidden", // Prevent overflow during typing
+//     whiteSpace: "nowrap", // Prevent text wrapping
+//   },
+//   buttonContainer: {
+//     display: "flex",
+//     gap: "60px",
+//   },
+//   button: {
+//     padding: "10px 30px",
+//     border: "none",
+//     borderRadius: "5px",
+//     fontSize: "18px",
+//     cursor: "pointer",
+//     backgroundColor: "#6c63ff",
+//     color: "#fff",
+//     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+//   },
+// };
+
+// export default MainPage;

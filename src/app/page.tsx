@@ -45,6 +45,7 @@ const Page = () => {
         },
         body: JSON.stringify({
           question: currentInput, // Send user input to the API
+          wallet_address: walletAddress,
           thread_id: walletInt,
         }),
       });

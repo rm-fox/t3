@@ -4,6 +4,8 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { walletAddressToInt } from "./utils/walletconv";
+import Image from "next/image";
+import Link from "next/link";
 
 const Page = () => {
   const { publicKey } = useWallet(); // Get the wallet public key
@@ -13,7 +15,6 @@ const Page = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [isClient, setIsClient] = useState(false); // Track if component is mounted
-  const [sideContent, setSideContent] = useState("Welcome to Risk Manager!"); // Initial side content
 
   useEffect(() => {
     setIsClient(true);
@@ -55,23 +56,15 @@ const Page = () => {
       }
       
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       const content = 
           data.result[0]?.assistant?.messages?.content || 
           data.result[1]?.assistant?.messages?.content || 
           data.result[2]?.assistant?.messages?.content || 
           "No content available";
 
-
       const botMessage = { sender: "bot", text: content };
       setMessages((prev) => [...prev, botMessage]);
-
-      // Update side content with part of the bot reply
-      if (content.includes("user address")) {
-        setSideContent(`Address: ${walletAddress}`);
-      } else {
-        setSideContent(content.slice(0, 100)); // Show the first 100 characters of the reply
-      }
     } catch (error) {
       const errorMessage = (error as Error).message || "Unknown error occurred";
       setMessages((prev) => [
@@ -94,16 +87,19 @@ const Page = () => {
 
   return (
     <div style={styles.page}>
-      <WalletMultiButton />
-      <div style={styles.container}>
-        {/* Left Column */}
-        <div style={styles.leftColumn}>
-          <div style={styles.sideContent}>{sideContent}</div>
+      <div style={styles.topBar}>
+        <Image src="/components/logo.png" alt="Logo" width={50} height={50} style={styles.logo} />
+        <div style={styles.buttonGroup}>
+          <WalletMultiButton />
+          <Link href="https://3p0.gitbook.io/t3" style={styles.documentationButton}>
+            [docs]
+          </Link>
         </div>
 
-        {/* Right Column */}
+      </div>
+      <div style={styles.container}>
         <div style={styles.rightColumn}>
-          <h1 style={styles.header}>Risk Manager</h1>
+          <h1 style={styles.header}>T3 [Trust in Web 3.0] Agent</h1>
           <div style={styles.chatBox}>
             {messages.map((msg, index) => (
               <div
@@ -116,15 +112,15 @@ const Page = () => {
                 <div
                   style={{
                     ...styles.messageBubble,
-                    backgroundColor: msg.sender === "user" ? "#d1e7dd" : "#f8d7da",
-                    color: msg.sender === "user" ? "#0f5132" : "#842029",
+                    backgroundColor: "#000000",
+                    color: "#ffffff",
                   }}
                 >
                   {msg.text}
                 </div>
               </div>
             ))}
-            {loading && <div style={styles.loading}>Bot is typing...</div>}
+            {loading && <div style={styles.loading}>T3 [Trust in Web 3.0] Agent is typing...</div>}
           </div>
           <form onSubmit={handleSubmit} style={styles.inputForm}>
             <input
@@ -150,6 +146,30 @@ const styles = {
   page: {
     fontFamily: "Arial, sans-serif",
   },
+  topBar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    backgroundColor: "#000000",
+  },
+  logo: {
+    height: "50px",
+  },
+  buttonGroup: {
+    display: "flex",
+    gap: "10px",
+  },
+  documentationButton: {
+    padding: "10px 15px",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#0d6efd",
+    color: "#fff",
+    fontSize: "16px",
+    cursor: "pointer",
+    textDecoration: "none",
+  },
   container: {
     display: "flex",
     flexDirection: "row" as "row",
@@ -157,25 +177,9 @@ const styles = {
     margin: "20px auto",
     gap: "20px",
   },
-  leftColumn: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  sideContent: {
-    textAlign: "center" as "center",
-    color: "#6c757d",
-    fontSize: "18px",
-    lineHeight: "1.5",
-  },
   rightColumn: {
     flex: 2,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#000000",
     borderRadius: "10px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     padding: "20px",
@@ -195,7 +199,7 @@ const styles = {
     padding: "10px",
     height: "600px",
     overflowY: "scroll" as "scroll",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#000000",
   },
   messageContainer: {
     display: "flex",

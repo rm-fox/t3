@@ -1,15 +1,3 @@
-// /src/app/trading/page.tsx
-// import React from 'react';
-
-// const TradingPage = () => {
-//   return <div>Welcome to the Trading Page!</div>;
-// };
-
-// export default TradingPage; // Default export
-
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -28,6 +16,15 @@ const TradingPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sideContent, setSideContent] = useState("Welcome to Risk Manager!");
+
+  // Handle sending a trade message to the chat
+  const handleTrade = (ticker: string) => {
+    const tradeMessage = `Trade ${ticker}`;
+    setMessages((prev) => [
+      ...prev,
+      { sender: "user", text: tradeMessage },
+    ]);
+  };
 
   const handleSendMessage = async () => {
     if (!publicKey) {
@@ -92,7 +89,11 @@ const TradingPage = () => {
         <WalletMultiButton />
       </div>
       <div style={styles.container}>
-        <SidePanel content={sideContent} walletAddress={publicKey?.toString()} />
+        <SidePanel
+          content={sideContent}
+          walletAddress={publicKey?.toString()}
+          onTrade={handleTrade} // Pass the onTrade handler
+        />
         <div style={styles.rightColumn}>
           <h1 style={styles.header}>Your Agent</h1>
           <div style={styles.chatBox}>
@@ -144,118 +145,129 @@ const TradingPage = () => {
 };
 
 const styles = {
-    page: {
-      fontFamily: "Arial, sans-serif",
-    },
-    logoWrapper: {
-      position: "absolute" as "absolute",
-      top: "0", // Removed padding from the top
-      left: "10px", // Removed padding from the left
-      zIndex: 10,
-    },
-    logo: {
-      width: "100px", // Increased width
-      height: "100px", // Increased height
-    },
-    walletButtonWrapper: {
-      position: "absolute" as "absolute",
-      top: "20px",
-      right: "20px",
-      zIndex: 10,
-    },
-    container: {
-      display: "flex",
-      flexDirection: "row" as "row",
-      maxWidth: "1200px",
-      margin: "100px auto", // Added margin to push boxes down
-      gap: "20px",
-    },
-    leftColumn: {
-      flex: 1,
-      backgroundColor: "#f8f9fa",
-      borderRadius: "10px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      padding: "20px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "500px", // Increased height
-    },
-    sideContent: {
-      textAlign: "center" as "center",
-      color: "#6c757d",
-      fontSize: "18px",
-      lineHeight: "1.5",
-    },
-    rightColumn: {
-      flex: 2,
-      backgroundColor: "#ffffff",
-      borderRadius: "10px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column" as "column",
-      height: "500px", // Increased height
-    },
-    header: {
-      textAlign: "center" as "center",
-      color: "#000000", // Set text to black
-      marginBottom: "20px",
-      fontSize: "24px",
-      fontWeight: "bold",
-    },
-    chatBox: {
-      border: "1px solid #ccc",
-      borderRadius: "10px",
-      padding: "10px",
-      height: "420px", // Adjusted to match the increased container height
-      overflowY: "scroll" as "scroll",
-      backgroundColor: "#ffffff",
-    },
-    messageContainer: {
-      display: "flex",
-      marginBottom: "10px",
-    },
-    messageBubble: {
-      padding: "10px 15px",
-      borderRadius: "15px",
-      maxWidth: "70%",
-      wordWrap: "break-word" as "break-word",
-    },
-    loading: {
-      textAlign: "center" as "center",
-      color: "#6c757d",
-      fontStyle: "italic",
-    },
-    inputForm: {
-      display: "flex",
-      marginTop: "10px",
-    },
-    inputField: {
-      flex: 1,
-      padding: "10px",
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-      fontSize: "16px",
-      backgroundColor: "#f1f1f1",
-      color: "#333",
-    },
-    sendButton: {
-      marginLeft: "10px",
-      padding: "10px 15px",
-      borderRadius: "5px",
-      border: "none",
-      backgroundColor: "#a370f0", // Light purple
-      color: "#fff",
-      fontSize: "16px",
-      cursor: "pointer",
-    },
-    error: {
-      marginTop: "10px",
-      color: "#842029",
-      textAlign: "center" as "center",
-    },
-  };
-  
-  
-export default TradingPage; // Default export
+  page: {
+    fontFamily: "Arial, sans-serif",
+  },
+  logoWrapper: {
+    position: "absolute" as "absolute",
+    top: "0",
+    left: "10px",
+    zIndex: 10,
+  },
+  logo: {
+    width: "100px",
+    height: "100px",
+  },
+  walletButtonWrapper: {
+    position: "absolute" as "absolute",
+    top: "20px",
+    right: "20px",
+    zIndex: 10,
+  },
+  container: {
+    display: "flex",
+    flexDirection: "row" as "row",
+    maxWidth: "1200px",
+    margin: "100px auto",
+    gap: "20px",
+  },
+  leftColumn: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "500px",
+  },
+  sideContent: {
+    textAlign: "center" as "center",
+    color: "#6c757d",
+    fontSize: "18px",
+    lineHeight: "1.5",
+  },
+  rightColumn: {
+    flex: 2,
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column" as "column",
+    height: "500px", // Ensure equal height for both columns
+    position: "relative", // Ensure the box is positioned for the shadow
+  },
+  header: {
+    textAlign: "center" as "center",
+    color: "#000000",
+    marginBottom: "20px",
+    fontSize: "24px",
+    fontWeight: "bold",
+  },
+  chatBox: {
+    border: "1px solid #ccc",
+    borderRadius: "10px",
+    padding: "10px",
+    height: "420px",
+    overflowY: "scroll" as "scroll",
+    backgroundColor: "#ffffff",
+  },
+  messageContainer: {
+    display: "flex",
+    marginBottom: "10px",
+  },
+  messageBubble: {
+    padding: "10px 15px",
+    borderRadius: "15px",
+    maxWidth: "70%",
+    wordWrap: "break-word" as "break-word",
+  },
+  loading: {
+    textAlign: "center" as "center",
+    color: "#6c757d",
+    fontStyle: "italic",
+  },
+  inputForm: {
+    display: "flex",
+    marginTop: "10px",
+  },
+  inputField: {
+    flex: 1,
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    fontSize: "16px",
+    backgroundColor: "#f1f1f1",
+    color: "#333",
+  },
+  sendButton: {
+    marginLeft: "10px",
+    padding: "10px 15px",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#a370f0",
+    color: "#fff",
+    fontSize: "16px",
+    cursor: "pointer",
+  },
+  error: {
+    marginTop: "10px",
+    color: "#842029",
+    textAlign: "center" as "center",
+  },
+
+  // Stronger turquoise shadow
+  shadowEffect: {
+    position: "absolute" as "absolute",
+    bottom: "-15px", // Increased to make the shadow more prominent
+    left: "0",
+    right: "0",
+    height: "15px", // Increased height for a stronger shadow
+    background: "linear-gradient(180deg, rgba(0, 188, 212, 0.7), rgba(0, 188, 212, 0.3))", // More intense turquoise shadow
+    borderRadius: "10px", // Optional: add radius for a smoother look
+  },
+};
+
+export default TradingPage;

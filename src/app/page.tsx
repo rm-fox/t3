@@ -7,37 +7,35 @@ import logo from "./components/logo.png"; // Adjust the path to your logo if nee
 
 const MainPage = () => {
   const router = useRouter();
-  const [typedText, setTypedText] = useState(""); // State to hold the dynamically typed text
-  const fullText = "Collateral, liquified - trade any asset and earn stake on your loan.";
+  const fullText = "Collateral, liquified - first on-chain\nundercollateralised lending platform powered by AI";
+
+  const [filter, setFilter] = useState("blur(5px)"); // Start with pixelated (blurry) effect
 
   useEffect(() => {
-    let charIndex = 0; // Index of the current character being typed
-    const typingInterval = setInterval(() => {
-      if (charIndex < fullText.length) {
-        const currentChar = fullText[charIndex]; // Get current character
-        if (currentChar !== undefined) {
-          setTypedText((prev) => prev + currentChar); // Append the character
-          charIndex++;
-        }
-      } else {
-        clearInterval(typingInterval); // Clear interval when typing is complete
-      }
-    }, 15); // Typing speed in milliseconds
+    // Remove pixelation after a shorter delay to speed up the loading effect
+    const timer = setTimeout(() => {
+      setFilter("none"); // Remove blur to make the text smooth
+    }, 100); // Faster transition (1.5 seconds)
 
-    return () => clearInterval(typingInterval); // Cleanup on component unmount
-  }, [fullText]);
+    return () => clearTimeout(timer); // Clean up the timeout when the component unmounts
+  }, []);
 
   return (
     <div style={styles.page}>
       <div style={styles.logoWrapper}>
         <Image src={logo} alt="Website Logo" style={styles.logo} />
       </div>
-      <p style={styles.description}>{typedText}</p> {/* Dynamically typed text */}
+      <p style={{ ...styles.description, filter: filter }}>
+        {fullText}
+      </p> {/* Full text with pixelated effect */}
       <div style={styles.buttonContainer}>
         <button onClick={() => router.push("/trading")} style={styles.button}>
           Trade
         </button>
-        <button onClick={() => router.push("/aboutus")} style={styles.button}>
+        <button
+          onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
+          style={styles.button}
+        >
           About Us
         </button>
       </div>
@@ -68,9 +66,13 @@ const styles = {
     fontSize: "20px",
     marginBottom: "50px",
     color: "#ffffff", // White text for description
-    height: "30px", // Height to prevent layout shifting
-    overflow: "hidden", // Prevent overflow during typing
+    height: "auto", // Allow the text to grow
+    overflow: "hidden", // Prevent overflow
     whiteSpace: "nowrap", // Prevent text wrapping
+    fontFamily: "GeistVF, Arial, sans-serif", // Use your custom font
+    letterSpacing: "2px", // Optional, adds space between characters
+    // Removed uppercase transformation to maintain the case
+    transition: "filter 0.5s ease-in-out", // Shorter transition (0.5s) to make it faster
   },
   buttonContainer: {
     display: "flex",
@@ -82,13 +84,17 @@ const styles = {
     borderRadius: "5px",
     fontSize: "18px",
     cursor: "pointer",
-    backgroundColor: "#6c63ff",
-    color: "#fff",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    backgroundColor: "#6c63ff", // Purple background
+    color: "#fff", // White text
+    boxShadow: "0 6px 12px rgba(64, 224, 208, 0.6)", // Turquoise shadow
+    transition: "all 0.3s ease", // Smooth transition for shadow and hover effect
   },
 };
 
 export default MainPage;
+
+
+
 
 
 

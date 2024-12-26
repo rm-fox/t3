@@ -55,26 +55,21 @@ const styles = {
     textAlign: "center" as "center",
     color: "#ffffff", // White text for contrast
     backgroundColor: "#000000", // Fallback color
-    // backgroundImage: `
-    //   linear-gradient(135deg, rgba(36, 40, 80, 0.8), rgba(0, 0, 0, 0.8)),
-    //   url('https://source.unsplash.com/random/1920x1080?nature')
-    // `,
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background4.jpg')`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    transform: "scale(0.8)",
   },
   logoWrapper: {
     marginBottom: "20px",
   },
   logo: {
-    width: "400px",
-    height: "400px",
+    width: "350px", // Slightly smaller size for the logo
+    height: "350px", // Slightly smaller size for the logo
   },
   description: {
-    fontSize: "20px",
-    marginBottom: "50px",
+    fontSize: "18px", // Decreased font size
+    marginBottom: "40px", // Reduced bottom margin
     color: "#ffffff", // White text for description
     height: "auto", // Allow the text to grow
     overflow: "hidden", // Prevent overflow
@@ -85,13 +80,13 @@ const styles = {
   },
   buttonContainer: {
     display: "flex",
-    gap: "60px",
+    gap: "50px", // Reduced gap between buttons
   },
   button: {
-    padding: "10px 30px",
+    padding: "8px 25px", // Smaller padding
     border: "none",
     borderRadius: "5px",
-    fontSize: "18px",
+    fontSize: "16px", // Decreased font size for the buttons
     cursor: "pointer",
     backgroundColor: "#6c63ff", // Purple background
     color: "#fff", // White text
@@ -99,6 +94,7 @@ const styles = {
     transition: "all 0.3s ease", // Smooth transition for shadow and hover effect
   },
 };
+
 
 
 export default MainPage;

@@ -151,7 +151,8 @@ const styles: { [key: string]: CSSProperties } = {
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     minHeight: "100vh",
-    transform: "scale(0.9)",
+    transform: "scaleX(0.8)",  // Zoom out horizontally by 10%    
+    transformOrigin: "center",
   },
   
   topBar: {

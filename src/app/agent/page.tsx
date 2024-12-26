@@ -150,7 +150,8 @@ const styles: { [key: string]: CSSProperties } = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    minHeight: "100vh"
+    minHeight: "100vh",
+    transform: "scale(0.9)",
   },
   
   topBar: {

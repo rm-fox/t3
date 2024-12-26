@@ -63,6 +63,7 @@ const styles = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
+    transform: "scale(0.9)",
   },
   logoWrapper: {
     marginBottom: "20px",

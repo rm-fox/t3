@@ -63,8 +63,7 @@ const styles = {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    transform: "scaleX(0.8)",  // Zoom out horizontally by 10%    
-    transformOrigin: "center",
+    transform: "scale(0.8)",
   },
   logoWrapper: {
     marginBottom: "20px",

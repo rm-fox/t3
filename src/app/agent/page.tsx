@@ -146,12 +146,12 @@ const styles: { [key: string]: CSSProperties } = {
   page: {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#000000",
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background3.jpg')`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background4.jpg')`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     minHeight: "100vh",
-    transform: "scaleX(0.8)",  // Zoom out horizontally by 10%    
+    // transform: "scaleX(0.8)",  // Zoom out horizontally by 10%    
     transformOrigin: "center",
   },
   

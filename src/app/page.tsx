@@ -1,142 +1,44 @@
+
 "use client";
 
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { walletAddressToInt } from "./utils/walletconv";
+import React, { useState, useEffect, Component } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import logo from "./components/logo.png"; // Adjust the path to your logo if needed
 
-const Page = () => {
-  const { publicKey } = useWallet(); // Get the wallet public key
+const MainPage = () => {
+  const router = useRouter();
+  const fullText = "The on-chain undercollateralised lending platform powered by AI. Leading the future of Liquid Collateral.";
 
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]); // Chat messages
-  const [currentInput, setCurrentInput] = useState(""); // User input
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
-  const [isClient, setIsClient] = useState(false); // Track if component is mounted
+  const [filter, setFilter] = useState("blur(5px)"); // Start with pixelated (blurry) effect
 
   useEffect(() => {
-    setIsClient(true);
+    // Remove pixelation after a shorter delay to speed up the loading effect
+    const timer = setTimeout(() => {
+      setFilter("none"); // Remove blur to make the text smooth
+    }, 100); // Faster transition (1.5 seconds)
+
+    return () => clearTimeout(timer); // Clean up the timeout when the component unmounts
   }, []);
-
-  const handleSendMessage = async () => {
-    if (!publicKey) {
-      setError("No wallet connected");
-      return;
-    }
-
-    const walletAddress = publicKey.toString();
-    const walletInt = walletAddressToInt(walletAddress);
-
-    if (!currentInput.trim()) return; // Prevent empty input
-
-    const userMessage = { sender: "user", text: currentInput };
-    setMessages((prev) => [...prev, userMessage]);
-    setCurrentInput(""); // Clear input
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: currentInput, // Send user input to the API
-          wallet_address: walletAddress,
-          thread_id: walletInt,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log(data);
-      const content = 
-          data.result[0]?.assistant?.messages?.content || 
-          data.result[1]?.assistant?.messages?.content || 
-          data.result[2]?.assistant?.messages?.content || 
-          "No content available";
-
-      const botMessage = { sender: "bot", text: content };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
-      const errorMessage = (error as Error).message || "Unknown error occurred";
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: `Error: ${errorMessage}` },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent page reload
-    handleSendMessage(); // Send message
-  };
-
-  if (!isClient) {
-    return null; // Return null while the component is not mounted on the client
-  }
 
   return (
     <div style={styles.page}>
-      <div style={styles.topBar}>
-        <Image src="/components/logo.png" alt="Logo" width={50} height={50} style={styles.logo} />
-        <div style={styles.buttonGroup}>
-          <WalletMultiButton />
-          <Link href="https://3p0.gitbook.io/t3" style={styles.documentationButton}>
-            [docs]
-          </Link>
-        </div>
-
+      <div style={styles.logoWrapper}>
+        <Image src={logo} alt="Website Logo" style={styles.logo} />
       </div>
-      <div style={styles.container}>
-        <div style={styles.rightColumn}>
-          <h1 style={styles.header}>T3 [Trust in Web 3.0] Agent</h1>
-          <div style={styles.chatBox}>
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                style={{
-                  ...styles.messageContainer,
-                  justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    ...styles.messageBubble,
-                    backgroundColor: "#000000",
-                    color: "#ffffff",
-                  }}
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            {loading && <div style={styles.loading}>T3 [Trust in Web 3.0] Agent is typing...</div>}
-          </div>
-          <form onSubmit={handleSubmit} style={styles.inputForm}>
-            <input
-              type="text"
-              value={currentInput}
-              onChange={(e) => setCurrentInput(e.target.value)}
-              placeholder="Type your message..."
-              required
-              style={styles.inputField}
-            />
-            <button type="submit" style={styles.sendButton}>
-              Send
-            </button>
-          </form>
-          {error && <div style={styles.error}>Error: {error}</div>}
-        </div>
+      <p style={{ ...styles.description, filter: filter }}>
+        {fullText}
+      </p> {/* Full text with pixelated effect */}
+      <div style={styles.buttonContainer}>
+        <button onClick={() => router.push("/agent")} style={styles.button}>
+          App
+        </button>
+        <button
+          onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
+          style={styles.button}
+        >
+          Docs
+        </button>
       </div>
     </div>
   );
@@ -145,105 +47,62 @@ const Page = () => {
 const styles = {
   page: {
     fontFamily: "Arial, sans-serif",
-  },
-  topBar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    backgroundColor: "#000000",
-  },
-  logo: {
-    height: "50px",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "10px",
-  },
-  documentationButton: {
-    padding: "10px 15px",
-    borderRadius: "5px",
-    border: "none",
-    backgroundColor: "#0d6efd",
-    color: "#fff",
-    fontSize: "16px",
-    cursor: "pointer",
-    textDecoration: "none",
-  },
-  container: {
-    display: "flex",
-    flexDirection: "row" as "row",
-    maxWidth: "1200px",
-    margin: "20px auto",
-    gap: "20px",
-  },
-  rightColumn: {
-    flex: 2,
-    backgroundColor: "#000000",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    padding: "20px",
+    height: "100vh",
     display: "flex",
     flexDirection: "column" as "column",
-  },
-  header: {
+    justifyContent: "center",
+    alignItems: "center",
     textAlign: "center" as "center",
-    color: "#0d6efd",
+    color: "#ffffff", // White text for contrast
+    backgroundColor: "#000000", // Fallback color
+    // backgroundImage: `
+    //   linear-gradient(135deg, rgba(36, 40, 80, 0.8), rgba(0, 0, 0, 0.8)),
+    //   url('https://source.unsplash.com/random/1920x1080?nature')
+    // `,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background4.jpg')`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  },
+  logoWrapper: {
     marginBottom: "20px",
-    fontSize: "24px",
-    fontWeight: "bold",
   },
-  chatBox: {
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    padding: "10px",
-    height: "600px",
-    overflowY: "scroll" as "scroll",
-    backgroundColor: "#000000",
+  logo: {
+    width: "400px",
+    height: "400px",
   },
-  messageContainer: {
+  description: {
+    fontSize: "20px",
+    marginBottom: "50px",
+    color: "#ffffff", // White text for description
+    height: "auto", // Allow the text to grow
+    overflow: "hidden", // Prevent overflow
+    whiteSpace: "nowrap", // Prevent text wrapping
+    fontFamily: "GeistVF, Arial, sans-serif", // Use your custom font
+    letterSpacing: "2px", // Optional, adds space between characters
+    transition: "filter 0.5s ease-in-out", // Shorter transition (0.5s) to make it faster
+  },
+  buttonContainer: {
     display: "flex",
-    marginBottom: "10px",
+    gap: "60px",
   },
-  messageBubble: {
-    padding: "10px 15px",
-    borderRadius: "15px",
-    maxWidth: "70%",
-    wordWrap: "break-word" as "break-word",
-  },
-  loading: {
-    textAlign: "center" as "center",
-    color: "#6c757d",
-    fontStyle: "italic",
-  },
-  inputForm: {
-    display: "flex",
-    marginTop: "10px",
-  },
-  inputField: {
-    flex: 1,
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    backgroundColor: "#f1f1f1",
-    color: "#333",
-  },
-  sendButton: {
-    marginLeft: "10px",
-    padding: "10px 15px",
-    borderRadius: "5px",
+  button: {
+    padding: "10px 30px",
     border: "none",
-    backgroundColor: "#0d6efd",
-    color: "#fff",
-    fontSize: "16px",
+    borderRadius: "5px",
+    fontSize: "18px",
     cursor: "pointer",
-  },
-  error: {
-    marginTop: "10px",
-    color: "#842029",
-    textAlign: "center" as "center",
+    backgroundColor: "#6c63ff", // Purple background
+    color: "#fff", // White text
+    boxShadow: "0 6px 12px rgba(64, 224, 208, 0.6)", // Turquoise shadow
+    transition: "all 0.3s ease", // Smooth transition for shadow and hover effect
   },
 };
 
-export default Page;
+
+export default MainPage;
+
+
+
+
+

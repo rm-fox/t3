@@ -64,11 +64,11 @@ const styles = {
     marginBottom: "20px",
   },
   logo: {
-    width: "350px", // Slightly smaller size for the logo
-    height: "350px", // Slightly smaller size for the logo
+    width: "300px", // Slightly smaller size for the logo
+    height: "300px", // Slightly smaller size for the logo
   },
   description: {
-    fontSize: "18px", // Decreased font size
+    fontSize: "15px", // Decreased font size
     marginBottom: "40px", // Reduced bottom margin
     color: "#ffffff", // White text for description
     height: "auto", // Allow the text to grow

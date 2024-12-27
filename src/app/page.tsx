@@ -7,133 +7,49 @@ import logo from "./components/logo.png"; // Adjust the path to your logo if nee
 
 const MainPage = () => {
   const router = useRouter();
-  const fullText = "The on-chain undercollateralised lending platform powered by AI. Leading the future of Liquid Collateral.";
+  const fullText =
+    "The on-chain undercollateralised lending platform powered by AI. Leading the future of Liquid Collateral.";
 
-  const [filter, setFilter] = useState("blur(5px)"); // Start with pixelated (blurry) effect
+  const [filter, setFilter] = useState("blur(5px)");
 
   useEffect(() => {
-    // Remove pixelation after a shorter delay to speed up the loading effect
     const timer = setTimeout(() => {
-      setFilter("none"); // Remove blur to make the text smooth
-    }, 100); // Faster transition (1.5 seconds)
-
-    return () => clearTimeout(timer); // Clean up the timeout when the component unmounts
+      setFilter("none");
+    }, 100); // Fast transition
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div style={styles.page}>
-      <div style={styles.logoWrapper}>
-        <Image src={logo} alt="Website Logo" style={styles.logo} />
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white text-center bg-cover bg-center bg-no-repeat"
+         style={{
+           backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/background4.jpg')"
+         }}
+    >
+      <div className="mb-4">
+        <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
       </div>
-      <p style={{ ...styles.description, filter: filter }}>
+      <p
+        className={`text-sm sm:text-lg md:text-xl mb-8 transition-filter duration-500`}
+        style={{ filter: filter }}
+      >
         {fullText}
-      </p> {/* Full text with pixelated effect */}
-      <div style={styles.buttonContainer}>
-        <button onClick={() => router.push("/agent")} style={styles.button}>
+      </p>
+      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+        <button
+          onClick={() => router.push("/agent")}
+          className="px-6 py-3 bg-purple-600 text-white rounded-md w-full sm:w-auto"
+        >
           App
         </button>
         <button
           onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
-          style={styles.button}
+          className="px-6 py-3 bg-purple-600 text-white rounded-md w-full sm:w-auto"
         >
           Docs
         </button>
       </div>
-      <style jsx>{`
-        @media (max-width: 768px) {
-          div {
-            font-size: 14px;
-          }
-          .logo {
-            width: 200px;
-            height: 200px;
-          }
-          .description {
-            font-size: 12px;
-            letter-spacing: 1px;
-          }
-          .buttonContainer {
-            gap: 20px;
-          }
-          .button {
-            font-size: 14px;
-            padding: 6px 20px;
-          }
-        }
-        @media (max-width: 480px) {
-          div {
-            font-size: 12px;
-          }
-          .logo {
-            width: 150px;
-            height: 150px;
-          }
-          .description {
-            font-size: 10px;
-            margin-bottom: 20px;
-          }
-          .buttonContainer {
-            gap: 15px;
-          }
-          .button {
-            font-size: 12px;
-            padding: 4px 15px;
-          }
-        }
-      `}</style>
     </div>
   );
-};
-
-const styles = {
-  page: {
-    fontFamily: "Arial, sans-serif",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column" as "column",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center" as "center",
-    color: "#ffffff", // White text for contrast
-    backgroundColor: "#000000", // Fallback color
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background4.jpg')`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  },
-  logoWrapper: {
-    marginBottom: "20px",
-  },
-  logo: {
-    width: "300px", // Slightly smaller size for the logo
-    height: "300px", // Slightly smaller size for the logo
-  },
-  description: {
-    fontSize: "15px", // Decreased font size
-    marginBottom: "40px", // Reduced bottom margin
-    color: "#ffffff", // White text for description
-    height: "auto", // Allow the text to grow
-    overflow: "hidden", // Prevent overflow
-    whiteSpace: "nowrap", // Prevent text wrapping
-    fontFamily: "GeistVF, Arial, sans-serif", // Use your custom font
-    letterSpacing: "2px", // Optional, adds space between characters
-    transition: "filter 0.5s ease-in-out", // Shorter transition (0.5s) to make it faster
-  },
-  buttonContainer: {
-    display: "flex",
-    gap: "50px", // Reduced gap between buttons
-  },
-  button: {
-    padding: "8px 25px", // Smaller padding
-    border: "none",
-    borderRadius: "5px",
-    fontSize: "16px", // Decreased font size for the buttons
-    cursor: "pointer",
-    backgroundColor: "#6c63ff", // Purple background
-    color: "#fff", // White text
-    // boxShadow: "0 6px 12px rgba(64, 224, 208, 0.6)", // Turquoise shadow
-    transition: "all 0.3s ease", // Smooth transition for shadow and hover effect
-  },
 };
 
 export default MainPage;

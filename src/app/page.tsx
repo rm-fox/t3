@@ -37,7 +37,7 @@ const MainPage = () => {
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
         <button
           onClick={() => router.push("/agent")}
-          className="px-6 py-3 bg-purple-600 text-white rounded-md w-full sm:w-auto"
+          className="px-6 py-3 bg-green-600 text-white rounded-md w-full sm:w-auto"
         >
           App
         </button>

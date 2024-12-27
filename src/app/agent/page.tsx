@@ -86,6 +86,26 @@ const Page = () => {
 
   return (
     <div style={styles.page}>
+      {/* Overlay to disable interactions */}
+      <div style={styles.overlay}>
+        <div style={styles.overlayContent}>
+          <h2 style={styles.overlayHeader}>AI Agent access temporarily restricted to existing users.</h2>
+          <p style={styles.overlayText}>
+            Access to the AI agent terminal is temporarily paused due to current onboarding limit as we work to interface with the, soon to be announced, lending protocol. If you are an existing user and have already made a user account via the Agent, connect your wallet to access the terminal.
+          </p>
+          <Link
+            href="https://x.com/trustInWeb3"
+            style={styles.twitterLink}
+          >
+            Follow T3 on X for updates.  
+          </Link>
+          <p style={styles.overlayText}>
+           Repost T3 on X to be added to early users airdrop registry.
+           </p>
+        </div>
+      </div>
+
+      {/* Rest of the application (underneath overlay) */}
       <div style={styles.topBar}>
         <div style={styles.buttonGroup}>
           <WalletMultiButton />
@@ -93,7 +113,6 @@ const Page = () => {
             [docs]
           </Link>
         </div>
-
       </div>
       <div style={styles.container}>
         <div style={styles.rightColumn}>
@@ -151,10 +170,39 @@ const styles: { [key: string]: CSSProperties } = {
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     minHeight: "100vh",
-    // transform: "scaleX(0.8)",  // Zoom out horizontally by 10%    
-    transformOrigin: "center",
   },
-  
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    zIndex: 1000,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#fff",
+    pointerEvents: "none", // Disable pointer events for the overlay
+  },
+  overlayContent: {
+    textAlign: "center" as "center",
+  },
+  overlayHeader: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    marginBottom: "20px",
+  },
+  overlayText: {
+    fontSize: "18px",
+    marginBottom: "20px",
+  },
+  twitterLink: {
+    color: "#1DA1F2",
+    textDecoration: "none",
+    fontSize: "16px",
+    fontWeight: "bold",
+  },
   topBar: {
     display: "flex",
     justifyContent: "flex-end", // Align items to the right
@@ -162,13 +210,11 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "10px 20px",
     backgroundColor: "#000000",
   },
-  
-  logo: {
-    height: "50px",
-  },
   buttonGroup: {
     display: "flex",
     gap: "10px",
+    pointerEvents: "auto", // Re-enable pointer events for buttons
+    zIndex: 1100,          // Ensure it stays above the overlay
   },
   documentationButton: {
     padding: "10px 15px",
@@ -223,12 +269,12 @@ const styles: { [key: string]: CSSProperties } = {
   },
   loading: {
     textAlign: "center" as "center",
-    color: "#6c757d",
-    fontStyle: "italic",
+    color: "#777",
   },
   inputForm: {
     display: "flex",
     marginTop: "10px",
+    gap: "10px",
   },
   inputField: {
     flex: 1,
@@ -236,11 +282,8 @@ const styles: { [key: string]: CSSProperties } = {
     borderRadius: "5px",
     border: "1px solid #ccc",
     fontSize: "16px",
-    backgroundColor: "#f1f1f1",
-    color: "#333",
   },
   sendButton: {
-    marginLeft: "10px",
     padding: "10px 15px",
     borderRadius: "5px",
     border: "none",
@@ -250,9 +293,8 @@ const styles: { [key: string]: CSSProperties } = {
     cursor: "pointer",
   },
   error: {
+    color: "red",
     marginTop: "10px",
-    color: "#842029",
-    textAlign: "center" as "center",
   },
 };
 

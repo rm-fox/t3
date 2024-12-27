@@ -29,7 +29,7 @@ const MainPage = () => {
         <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
       </div>
       <p
-        className={`text-xs sm:text-sm md:text-lg mb-8 transition-filter duration-500`} // Adjusted text size
+        className={`text-xs sm:text-[10px] md:text-sm mb-8 transition-filter duration-500`} // Smaller text size
         style={{ filter: filter }}
       >
         {fullText}
@@ -39,13 +39,13 @@ const MainPage = () => {
           onClick={() => router.push("/agent")}
           className="px-6 py-3 bg-green-600 text-white rounded-md w-full sm:w-auto"
         >
-          App
+          [app]
         </button>
         <button
           onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
           className="px-6 py-3 bg-purple-600 text-white rounded-md w-full sm:w-auto"
         >
-          Docs
+          [docs]
         </button>
       </div>
     </div>

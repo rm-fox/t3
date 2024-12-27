@@ -183,24 +183,23 @@ const styles: { [key: string]: CSSProperties } = {
     justifyContent: "center",
     alignItems: "center",
     color: "#fff",
-    pointerEvents: "none", // Disable pointer events for the overlay
   },
   overlayContent: {
     textAlign: "center" as "center",
   },
   overlayHeader: {
-    fontSize: "24px",
+    fontSize: "20px", // Smaller font size
     fontWeight: "bold",
     marginBottom: "20px",
   },
   overlayText: {
-    fontSize: "18px",
+    fontSize: "16px", // Smaller font size
     marginBottom: "20px",
   },
   twitterLink: {
     color: "#1DA1F2",
     textDecoration: "none",
-    fontSize: "16px",
+    fontSize: "14px", // Smaller font size
     fontWeight: "bold",
   },
   topBar: {
@@ -222,7 +221,7 @@ const styles: { [key: string]: CSSProperties } = {
     border: "none",
     backgroundColor: "#0d6efd",
     color: "#fff",
-    fontSize: "16px",
+    fontSize: "14px", // Smaller font size
     cursor: "pointer",
     textDecoration: "none",
   },
@@ -246,7 +245,7 @@ const styles: { [key: string]: CSSProperties } = {
     textAlign: "center" as "center",
     color: "#0d6efd",
     marginBottom: "20px",
-    fontSize: "24px",
+    fontSize: "20px", // Smaller font size
     fontWeight: "bold",
   },
   chatBox: {
@@ -281,7 +280,7 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "10px",
     borderRadius: "5px",
     border: "1px solid #ccc",
-    fontSize: "16px",
+    fontSize: "14px", // Smaller font size
   },
   sendButton: {
     padding: "10px 15px",
@@ -289,7 +288,7 @@ const styles: { [key: string]: CSSProperties } = {
     border: "none",
     backgroundColor: "#0d6efd",
     color: "#fff",
-    fontSize: "16px",
+    fontSize: "14px", // Smaller font size
     cursor: "pointer",
   },
   error: {

@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { walletAddressToInt } from "../utils/walletconv";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "../components/logo.png";
 
 const Page = () => {
   const { publicKey } = useWallet(); // Get the wallet public key
@@ -89,19 +91,42 @@ const Page = () => {
       {/* Overlay to disable interactions */}
       <div style={styles.overlay}>
         <div style={styles.overlayContent}>
-          <h2 style={styles.overlayHeader}>AI Agent access temporarily restricted to existing users.</h2>
+        
+          <h2 style={styles.overlayHeader}>Access to the AI agent terminal is temporarily paused for new users. </h2>
+          {/* <p style={styles.overlayText}>
+            Access to the AI agent terminal is temporarily paused for new users.  </p> */}
           <p style={styles.overlayText}>
-            Access to the AI agent terminal is temporarily paused due to current onboarding limit as we work to interface with the, soon to be announced, lending protocol. If you are an existing user and have already made a user account via the Agent, connect your wallet to access the terminal.
+          This is due to current onboarding limit as we work to interface with the, soon to be announced, lending protocol. 
           </p>
-          <Link
+          <p style={styles.overlayText}>
+           If you are an existing user and have already made a user account via the Agent, connect your wallet to access the terminal.
+           </p>
+           <p style={styles.overlayText}>
+            Expected re-opening to further users on 01/01/2025.
+            </p>
+            <p style={styles.overlayText}></p>
+          {/* <Link
             href="https://x.com/trustInWeb3"
             style={styles.twitterLink}
           >
             Follow T3 on X for updates.  
-          </Link>
-          <p style={styles.overlayText}>
+          </Link> */}
+          
+          <div style={styles.logoContainer}>
+            <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
+          </div>
+          <a
+            href="https://x.com/trustInWeb3"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.twitterButton}
+          >
+            Follow T3 on X
+          </a>
+          <p style={styles.overlayText}></p>
+          {/* <p style={styles.overlayText}>
            Repost T3 on X to be added to early users airdrop registry.
-           </p>
+           </p> */}
         </div>
       </div>
 
@@ -295,6 +320,38 @@ const styles: { [key: string]: CSSProperties } = {
     color: "red",
     marginTop: "10px",
   },
+  twitterButton: {
+    padding: "20px 20px",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#1DA1F2",
+    color: "#fff",
+    fontSize: "14px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    textDecoration: "none",
+    margin: "10px 0", // Add spacing between buttons
+  },
+  telegramButton: {
+    padding: "10px 20px",
+    borderRadius: "10px",
+    border: "none",
+    backgroundColor: "#0088cc",
+    color: "#fff",
+    fontSize: "14px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    textDecoration: "none",
+    margin: "10px 0", // Add spacing between buttons
+  },
+  logoContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: "20px 0", // Optional: Add spacing around the logo
+  },
+  
 };
+
 
 export default Page;

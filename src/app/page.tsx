@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import logo from "./components/logo.png"; // Adjust the path to your logo if needed
@@ -40,6 +39,48 @@ const MainPage = () => {
           Docs
         </button>
       </div>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          div {
+            font-size: 14px;
+          }
+          .logo {
+            width: 200px;
+            height: 200px;
+          }
+          .description {
+            font-size: 12px;
+            letter-spacing: 1px;
+          }
+          .buttonContainer {
+            gap: 20px;
+          }
+          .button {
+            font-size: 14px;
+            padding: 6px 20px;
+          }
+        }
+        @media (max-width: 480px) {
+          div {
+            font-size: 12px;
+          }
+          .logo {
+            width: 150px;
+            height: 150px;
+          }
+          .description {
+            font-size: 10px;
+            margin-bottom: 20px;
+          }
+          .buttonContainer {
+            gap: 15px;
+          }
+          .button {
+            font-size: 12px;
+            padding: 4px 15px;
+          }
+        }
+      `}</style>
     </div>
   );
 };
@@ -95,11 +136,4 @@ const styles = {
   },
 };
 
-
-
 export default MainPage;
-
-
-
-
-

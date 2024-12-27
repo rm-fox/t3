@@ -37,13 +37,13 @@ const MainPage = () => {
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
         <button
           onClick={() => router.push("/agent")}
-          className="px-6 py-3 bg-green-600 text-white rounded-md w-full sm:w-auto"
+          className="px-4 py-2 bg-green-600 text-white rounded-md w-full sm:w-auto"
         >
           [app]
         </button>
         <button
           onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
-          className="px-6 py-3 bg-purple-600 text-white rounded-md w-full sm:w-auto"
+          className="px-4 py-2 bg-purple-600 text-white rounded-md w-full sm:w-auto"
         >
           [docs]
         </button>

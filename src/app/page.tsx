@@ -29,7 +29,7 @@ const MainPage = () => {
         <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
       </div>
       <p
-        className={`text-sm sm:text-lg md:text-xl mb-8 transition-filter duration-500`}
+        className={`text-xs sm:text-sm md:text-lg mb-8 transition-filter duration-500`} // Adjusted text size
         style={{ filter: filter }}
       >
         {fullText}

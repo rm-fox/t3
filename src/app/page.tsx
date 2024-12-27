@@ -8,7 +8,8 @@ import logo from "./components/logo.png"; // Adjust the path to your logo if nee
 
 const MainPage = () => {
   const router = useRouter();
-  const fullText = "The on-chain undercollateralised lending platform powered by AI. Leading the future of Liquid Collateral.";
+  const fullText = "The on-chain undercollateralised lending platform powered by AI.";
+  const fullText2 = "Leading the future of Liquid Collateral.";
 
   const [filter, setFilter] = useState("blur(5px)"); // Start with pixelated (blurry) effect
 
@@ -28,16 +29,27 @@ const MainPage = () => {
       </div>
       <p style={{ ...styles.description, filter: filter }}>
         {fullText}
+        
+      </p> {/* Full text with pixelated effect */}
+      <p style={{ ...styles.description, filter: filter }}>
+        {fullText2}
+        
       </p> {/* Full text with pixelated effect */}
       <div style={styles.buttonContainer}>
-        <button onClick={() => router.push("/agent")} style={styles.button}>
-          App
+        <button onClick={() => router.push("/signup")} style={styles.button}>
+          Trade
         </button>
         <button
           onClick={() => window.location.href = "https://3p0.gitbook.io/t3"}
           style={styles.button}
         >
-          Docs
+          About
+        </button>
+        <button
+          onClick={() => window.location.href = "https://www.notion.so/White-paper-9f9379b87ab94ca1ad348d55595625e7?pvs=4"}
+          style={styles.button}
+        >
+          Whitepaper
         </button>
       </div>
     </div>
@@ -68,7 +80,7 @@ const styles = {
     height: "300px", // Slightly smaller size for the logo
   },
   description: {
-    fontSize: "15px", // Decreased font size
+    fontSize: "20px", // Decreased font size
     marginBottom: "40px", // Reduced bottom margin
     color: "#ffffff", // White text for description
     height: "auto", // Allow the text to grow
@@ -80,13 +92,13 @@ const styles = {
   },
   buttonContainer: {
     display: "flex",
-    gap: "50px", // Reduced gap between buttons
+    gap: "30px", // Reduced gap between buttons
   },
   button: {
     padding: "8px 25px", // Smaller padding
     border: "none",
     borderRadius: "5px",
-    fontSize: "16px", // Decreased font size for the buttons
+    fontSize: "20px", // Decreased font size for the buttons
     cursor: "pointer",
     backgroundColor: "#6c63ff", // Purple background
     color: "#fff", // White text

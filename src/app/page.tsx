@@ -131,7 +131,7 @@ const styles = {
     cursor: "pointer",
     backgroundColor: "#6c63ff", // Purple background
     color: "#fff", // White text
-    boxShadow: "0 6px 12px rgba(64, 224, 208, 0.6)", // Turquoise shadow
+    // boxShadow: "0 6px 12px rgba(64, 224, 208, 0.6)", // Turquoise shadow
     transition: "all 0.3s ease", // Smooth transition for shadow and hover effect
   },
 };

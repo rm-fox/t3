@@ -102,7 +102,7 @@ const Page = () => {
            If you are an existing user and have already made a user account via the Agent, connect your wallet to access the terminal.
            </p>
            <p style={styles.overlayText}>
-            Expected re-opening to further users on 01/01/2025.
+            Expected re-opening to further users on 05/01/2025.
             </p>
             <p style={styles.overlayText}></p>
           {/* <Link

@@ -15,6 +15,7 @@ const Page = () => {
   const [currentInput, setCurrentInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -55,13 +56,14 @@ const Page = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-      const content =
-        data.result[0]?.assistant?.messages?.content ||
-        data.result[1]?.assistant?.messages?.content ||
-        data.result[2]?.assistant?.messages?.content ||
-        "No content available";
+      console.log(data);
+      const content = 
+          data.result[0]?.assistant?.messages?.content || 
+          data.result[1]?.assistant?.messages?.content || 
+          data.result[2]?.assistant?.messages?.content || 
+          "No content available";
 
       const botMessage = { sender: "bot", text: content };
       setMessages((prev) => [...prev, botMessage]);
@@ -81,6 +83,16 @@ const Page = () => {
     handleSendMessage();
   };
 
+  const handleEmailSubmit = () => {
+    if (!email.trim()) {
+      alert("Please enter a valid email address!");
+      return;
+    }
+    console.log("Email submitted:", email);
+    alert("Thank you! We'll keep you updated.");
+    setEmail("");
+  };
+
   if (!isClient) {
     return null;
   }
@@ -89,21 +101,41 @@ const Page = () => {
     <div style={styles.page}>
       <div style={styles.overlay}>
         <div style={styles.overlayContent}>
+          <h2 style={styles.overlayHeader}>
+            Access to the AI agent terminal is temporarily paused for new users.
+          </h2>
+          <p style={styles.overlayText}>
+            This is due to current onboarding limits as we work to interface with the soon-to-be-announced lending protocol.
+          </p>
+          <p style={styles.overlayText}>
+            Expected re-opening to further users on 05/01/2025.
+          </p>
+
           <div style={styles.logoContainer}>
             <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
           </div>
-          <h1 style={styles.overlayHeader}>
-            Access to the AI agent terminal is temporarily paused.
-          </h1>
-          <p style={styles.overlayText}>
-            This is due to current onboarding limits and agent development. Current expected 
-          </p>
-          <p style={styles.overlayText}>
-            further update and new user sign-up opportunities - January 5th. 
-          </p>
-          <p style={styles.overlayText}>
-            Follow our socials to be notified first. <br />
-          </p>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEmailSubmit();
+            }}
+            style={styles.emailForm}
+          >
+            <div style={styles.inputGroup}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                style={styles.emailInput}
+              />
+              <button type="submit" style={styles.emailButton}>
+                Sign Up
+              </button>
+            </div>
+          </form>
+
           <div style={styles.socialButtons}>
             <a
               href="https://x.com/trustInWeb3"
@@ -111,7 +143,7 @@ const Page = () => {
               rel="noopener noreferrer"
               style={styles.socialButtonX}
             >
-              [ X ]
+             [    X    ]
             </a>
             <a
               href="https://t.me/trustInWeb3_AI"
@@ -119,7 +151,7 @@ const Page = () => {
               rel="noopener noreferrer"
               style={styles.socialButtonTelegram}
             >
-              [ Telegram ]
+              [Telegram]
             </a>
           </div>
         </div>
@@ -183,7 +215,7 @@ import { CSSProperties } from "react";
 
 const styles: { [key: string]: CSSProperties } = {
   page: {
-    fontFamily: "'Roboto Mono', monospace",
+    fontFamily: "'Roboto Mono', monospace", 
     backgroundColor: "#000000",
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/background4.jpg')`,
     backgroundSize: "cover",
@@ -223,6 +255,35 @@ const styles: { [key: string]: CSSProperties } = {
     justifyContent: "center",
     alignItems: "center",
     margin: "20px 0",
+  },
+  emailForm: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    alignItems: "center",
+    marginTop: "20px",
+  },
+  inputGroup: {
+    display: "flex",
+    gap: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emailInput: {
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    width: "250px",
+    fontSize: "14px",
+  },
+  emailButton: {
+    padding: "10px 20px",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#7c3aed",
+    color: "#fff",
+    fontSize: "14px",
+    cursor: "pointer",
   },
   socialButtons: {
     display: "flex",
@@ -344,7 +405,6 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 export default Page;
-
 
 
 

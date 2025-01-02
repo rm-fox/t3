@@ -15,6 +15,8 @@ const Page = () => {
   const [currentInput, setCurrentInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [storedEmails, setStoredEmails] = useState<string[]>([]);  // State to store emails
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -55,13 +57,14 @@ const Page = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      
       const data = await response.json();
-      const content =
-        data.result[0]?.assistant?.messages?.content ||
-        data.result[1]?.assistant?.messages?.content ||
-        data.result[2]?.assistant?.messages?.content ||
-        "No content available";
+      console.log(data);
+      const content = 
+          data.result[0]?.assistant?.messages?.content || 
+          data.result[1]?.assistant?.messages?.content || 
+          data.result[2]?.assistant?.messages?.content || 
+          "No content available";
 
       const botMessage = { sender: "bot", text: content };
       setMessages((prev) => [...prev, botMessage]);
@@ -79,6 +82,21 @@ const Page = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleSendMessage();
+  };
+
+  const handleEmailSubmit = () => {
+    if (!email.trim()) {
+      alert("Please enter a valid email address!");
+      return;
+    }
+    console.log("Email submitted:", email);
+
+    // Store the email in the state
+    setStoredEmails((prevEmails) => [...prevEmails, email]);
+    alert("Thank you! We'll keep you updated.");
+
+    // Clear the input after submission
+    setEmail("");
   };
 
   if (!isClient) {
@@ -99,11 +117,38 @@ const Page = () => {
             This is due to current onboarding limits and agent development. Current expected 
           </p>
           <p style={styles.overlayText}>
-            further update and new user sign-up opportunities - January 5th. 
+          further update and new user sign-up opportunities - January 5th. Register early interest
           </p>
           <p style={styles.overlayText}>
-            Follow our socials to be notified first. <br />
+           below or follow our socials to be notified first. < br/>
           </p>
+          <div style={{ marginBottom: '50px' }}></div>  {/* Adds an empty line with 20px spacing */}
+          <p style={styles.overlayText}>
+            {/* More content here */}
+          </p>
+
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEmailSubmit();
+            }}
+            style={styles.emailForm}
+          >
+            <div style={styles.inputGroup}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                style={styles.emailInput}
+              />
+              <button type="submit" style={styles.emailButton}>
+                Sign Up
+              </button>
+            </div>
+          </form>
+
           <div style={styles.socialButtons}>
             <a
               href="https://x.com/trustInWeb3"
@@ -111,10 +156,10 @@ const Page = () => {
               rel="noopener noreferrer"
               style={styles.socialButtonX}
             >
-              [ X ]
+            [     X     ]
             </a>
             <a
-              href="https://t.me/trustInWeb3_AI"
+              href="https://t.me/yourtelegramlink"
               target="_blank"
               rel="noopener noreferrer"
               style={styles.socialButtonTelegram}
@@ -183,7 +228,7 @@ import { CSSProperties } from "react";
 
 const styles: { [key: string]: CSSProperties } = {
   page: {
-    fontFamily: "'Roboto Mono', monospace",
+    fontFamily: "'Roboto Mono', monospace", 
     backgroundColor: "#000000",
     backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/background4.jpg')`,
     backgroundSize: "cover",
@@ -223,6 +268,36 @@ const styles: { [key: string]: CSSProperties } = {
     justifyContent: "center",
     alignItems: "center",
     margin: "20px 0",
+  },
+  emailForm: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    alignItems: "center",
+    marginTop: "20px",
+  },
+  inputGroup: {
+    display: "flex",
+    gap: "10px",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emailInput: {
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    width: "250px",
+    fontSize: "14px",
+    color: "black",  // Change text color to black
+  },
+  emailButton: {
+    padding: "10px 20px",
+    borderRadius: "5px",
+    border: "none",
+    backgroundColor: "#7c3aed",
+    color: "#fff",
+    fontSize: "14px",
+    cursor: "pointer",
   },
   socialButtons: {
     display: "flex",
@@ -344,7 +419,6 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 export default Page;
-
 
 
 

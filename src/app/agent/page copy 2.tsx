@@ -16,7 +16,6 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
-  const [storedEmails, setStoredEmails] = useState<string[]>([]);  // State to store emails
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -90,12 +89,7 @@ const Page = () => {
       return;
     }
     console.log("Email submitted:", email);
-
-    // Store the email in the state
-    setStoredEmails((prevEmails) => [...prevEmails, email]);
     alert("Thank you! We'll keep you updated.");
-
-    // Clear the input after submission
     setEmail("");
   };
 
@@ -107,26 +101,19 @@ const Page = () => {
     <div style={styles.page}>
       <div style={styles.overlay}>
         <div style={styles.overlayContent}>
+          <h2 style={styles.overlayHeader}>
+            Access to the AI agent terminal is temporarily paused for new users.
+          </h2>
+          <p style={styles.overlayText}>
+            This is due to current onboarding limits as we work to interface with the soon-to-be-announced lending protocol.
+          </p>
+          <p style={styles.overlayText}>
+            Expected re-opening to further users on 05/01/2025.
+          </p>
+
           <div style={styles.logoContainer}>
             <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
           </div>
-          <h1 style={styles.overlayHeader}>
-            Access to the AI agent terminal is temporarily paused.
-          </h1>
-          <p style={styles.overlayText}>
-            This is due to current onboarding limits and agent development. Current expected 
-          </p>
-          <p style={styles.overlayText}>
-          further update and new user sign-up opportunities - January 5th. Register early interest
-          </p>
-          <p style={styles.overlayText}>
-           below or follow our socials to be notified first. < br/>
-          </p>
-          <div style={{ marginBottom: '50px' }}></div>  {/* Adds an empty line with 20px spacing */}
-          <p style={styles.overlayText}>
-            {/* More content here */}
-          </p>
-
 
           <form
             onSubmit={(e) => {
@@ -156,15 +143,15 @@ const Page = () => {
               rel="noopener noreferrer"
               style={styles.socialButtonX}
             >
-            [     X     ]
+             [    X    ]
             </a>
             <a
-              href="https://t.me/yourtelegramlink"
+              href="https://t.me/trustInWeb3_AI"
               target="_blank"
               rel="noopener noreferrer"
               style={styles.socialButtonTelegram}
             >
-              [ Telegram ]
+              [Telegram]
             </a>
           </div>
         </div>
@@ -288,7 +275,6 @@ const styles: { [key: string]: CSSProperties } = {
     border: "1px solid #ccc",
     width: "250px",
     fontSize: "14px",
-    color: "black",  // Change text color to black
   },
   emailButton: {
     padding: "10px 20px",

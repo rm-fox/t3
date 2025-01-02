@@ -9,15 +9,14 @@ import Image from "next/image";
 import logo from "../components/logo.png";
 
 const Page = () => {
-  const { publicKey } = useWallet();
+  const { publicKey } = useWallet(); // Get the wallet public key
 
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]);
-  const [currentInput, setCurrentInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
-  const [storedEmails, setStoredEmails] = useState<string[]>([]);  // State to store emails
-  const [isClient, setIsClient] = useState(false);
+  const [messages, setMessages] = useState<{ sender: string; text: string }[]>([]); // Chat messages
+  const [currentInput, setCurrentInput] = useState(""); // User input
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
+  const [email, setEmail] = useState(""); // Email state
+  const [isClient, setIsClient] = useState(false); // Track if component is mounted
 
   useEffect(() => {
     setIsClient(true);
@@ -32,11 +31,11 @@ const Page = () => {
     const walletAddress = publicKey.toString();
     const walletInt = walletAddressToInt(walletAddress);
 
-    if (!currentInput.trim()) return;
+    if (!currentInput.trim()) return; // Prevent empty input
 
     const userMessage = { sender: "user", text: currentInput };
     setMessages((prev) => [...prev, userMessage]);
-    setCurrentInput("");
+    setCurrentInput(""); // Clear input
     setLoading(true);
     setError(null);
 
@@ -48,7 +47,7 @@ const Page = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          question: currentInput,
+          question: currentInput, // Send user input to the API
           wallet_address: walletAddress,
           thread_id: walletInt,
         }),
@@ -80,8 +79,8 @@ const Page = () => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    handleSendMessage();
+    event.preventDefault(); // Prevent page reload
+    handleSendMessage(); // Send message
   };
 
   const handleEmailSubmit = () => {
@@ -89,45 +88,37 @@ const Page = () => {
       alert("Please enter a valid email address!");
       return;
     }
+    // Handle email storage here (e.g., API call, Firebase, etc.)
     console.log("Email submitted:", email);
-
-    // Store the email in the state
-    setStoredEmails((prevEmails) => [...prevEmails, email]);
     alert("Thank you! We'll keep you updated.");
-
-    // Clear the input after submission
     setEmail("");
   };
 
   if (!isClient) {
-    return null;
+    return null; // Return null while the component is not mounted on the client
   }
 
   return (
     <div style={styles.page}>
+      {/* Overlay to disable interactions */}
       <div style={styles.overlay}>
         <div style={styles.overlayContent}>
+          <h2 style={styles.overlayHeader}>
+            Access to the AI agent terminal is temporarily paused for new users.
+          </h2>
+          <p style={styles.overlayText}>
+            This is due to current onboarding limits as we work to interface with the soon-to-be-announced lending protocol.
+          </p>
+          <p style={styles.overlayText}>
+            Expected re-opening to further users on 05/01/2025.
+          </p>
+          <p style={styles.overlayText}></p>
+
           <div style={styles.logoContainer}>
             <Image src={logo} alt="Website Logo" className="w-48 h-48 sm:w-64 sm:h-64" />
           </div>
-          <h1 style={styles.overlayHeader}>
-            Access to the AI agent terminal is temporarily paused.
-          </h1>
-          <p style={styles.overlayText}>
-            This is due to current onboarding limits and agent development. Current expected 
-          </p>
-          <p style={styles.overlayText}>
-          further update and new user sign-up opportunities - January 5th. Register early interest
-          </p>
-          <p style={styles.overlayText}>
-           below or follow our socials to be notified first. < br/>
-          </p>
-          <div style={{ marginBottom: '50px' }}></div>  {/* Adds an empty line with 20px spacing */}
-          <p style={styles.overlayText}>
-            {/* More content here */}
-          </p>
 
-
+          {/* Email Signup Form */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -135,41 +126,30 @@ const Page = () => {
             }}
             style={styles.emailForm}
           >
-            <div style={styles.inputGroup}>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                style={styles.emailInput}
-              />
-              <button type="submit" style={styles.emailButton}>
-                Sign Up
-              </button>
-            </div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              style={styles.emailInput}
+            />
+            <button type="submit" style={styles.emailButton}>
+              Sign Up
+            </button>
           </form>
 
-          <div style={styles.socialButtons}>
-            <a
-              href="https://x.com/trustInWeb3"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.socialButtonX}
-            >
-            [     X     ]
-            </a>
-            <a
-              href="https://t.me/yourtelegramlink"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.socialButtonTelegram}
-            >
-              [ Telegram ]
-            </a>
-          </div>
+          <a
+            href="https://x.com/trustInWeb3"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.twitterButton}
+          >
+            Follow T3 on X
+          </a>
         </div>
       </div>
 
+      {/* Rest of the application (underneath overlay) */}
       <div style={styles.topBar}>
         <div style={styles.buttonGroup}>
           <WalletMultiButton />
@@ -228,9 +208,9 @@ import { CSSProperties } from "react";
 
 const styles: { [key: string]: CSSProperties } = {
   page: {
-    fontFamily: "'Roboto Mono', monospace", 
+    fontFamily: "Arial, sans-serif",
     backgroundColor: "#000000",
-    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/background4.jpg')`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('/images/background4.jpg')`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -253,21 +233,19 @@ const styles: { [key: string]: CSSProperties } = {
     textAlign: "center" as "center",
   },
   overlayHeader: {
-    fontSize: "20px",
+    fontSize: "20px", // Smaller font size
     fontWeight: "bold",
     marginBottom: "20px",
-    color: "#fff",
   },
   overlayText: {
-    fontSize: "16px",
+    fontSize: "16px", // Smaller font size
     marginBottom: "20px",
-    color: "#fff",
   },
   logoContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    margin: "20px 0",
+    margin: "20px 0", // Optional: Add spacing around the logo
   },
   emailForm: {
     display: "flex",
@@ -276,37 +254,24 @@ const styles: { [key: string]: CSSProperties } = {
     alignItems: "center",
     marginTop: "20px",
   },
-  inputGroup: {
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   emailInput: {
     padding: "10px",
     borderRadius: "5px",
     border: "1px solid #ccc",
     width: "250px",
     fontSize: "14px",
-    color: "black",  // Change text color to black
   },
   emailButton: {
     padding: "10px 20px",
     borderRadius: "5px",
     border: "none",
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#7c3aed", // Purple background
     color: "#fff",
     fontSize: "14px",
     cursor: "pointer",
   },
-  socialButtons: {
-    display: "flex",
-    gap: "10px",
-    justifyContent: "center",
-    marginTop: "20px",
-  },
-  socialButtonX: {
-    padding: "8px 12px",
+  twitterButton: {
+    padding: "10px 20px",
     borderRadius: "5px",
     backgroundColor: "#1DA1F2",
     color: "#fff",
@@ -314,20 +279,11 @@ const styles: { [key: string]: CSSProperties } = {
     fontWeight: "bold",
     cursor: "pointer",
     textDecoration: "none",
-  },
-  socialButtonTelegram: {
-    padding: "8px 12px",
-    borderRadius: "5px",
-    backgroundColor: "#0088cc",
-    color: "#fff",
-    fontSize: "14px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    textDecoration: "none",
+    marginTop: "10px", // Add spacing between buttons
   },
   topBar: {
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "flex-end", // Align items to the right
     alignItems: "center",
     padding: "10px 20px",
     backgroundColor: "#000000",
@@ -335,20 +291,22 @@ const styles: { [key: string]: CSSProperties } = {
   buttonGroup: {
     display: "flex",
     gap: "10px",
+    pointerEvents: "auto", // Re-enable pointer events for buttons
+    zIndex: 1100,          // Ensure it stays above the overlay
   },
   documentationButton: {
     padding: "10px 15px",
     borderRadius: "5px",
     border: "none",
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#0d6efd",
     color: "#fff",
-    fontSize: "14px",
+    fontSize: "14px", // Smaller font size
     cursor: "pointer",
     textDecoration: "none",
   },
   container: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row" as "row",
     maxWidth: "1200px",
     margin: "20px auto",
     gap: "20px",
@@ -360,13 +318,13 @@ const styles: { [key: string]: CSSProperties } = {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     padding: "20px",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as "column",
   },
   header: {
-    textAlign: "center",
-    color: "#7c3aed",
+    textAlign: "center" as "center",
+    color: "#0d6efd",
     marginBottom: "20px",
-    fontSize: "20px",
+    fontSize: "20px", // Smaller font size
     fontWeight: "bold",
   },
   chatBox: {
@@ -374,7 +332,7 @@ const styles: { [key: string]: CSSProperties } = {
     borderRadius: "10px",
     padding: "10px",
     height: "600px",
-    overflowY: "scroll",
+    overflowY: "scroll" as "scroll",
     backgroundColor: "#000000",
   },
   messageContainer: {
@@ -385,10 +343,10 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "10px 15px",
     borderRadius: "15px",
     maxWidth: "70%",
-    wordWrap: "break-word",
+    wordWrap: "break-word" as "break-word",
   },
   loading: {
-    textAlign: "center",
+    textAlign: "center" as "center",
     color: "#777",
   },
   inputForm: {
@@ -401,15 +359,15 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "10px",
     borderRadius: "5px",
     border: "1px solid #ccc",
-    fontSize: "14px",
+    fontSize: "14px", // Smaller font size
   },
   sendButton: {
     padding: "10px 15px",
     borderRadius: "5px",
     border: "none",
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#0d6efd",
     color: "#fff",
-    fontSize: "14px",
+    fontSize: "14px", // Smaller font size
     cursor: "pointer",
   },
   error: {
@@ -419,6 +377,3 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 export default Page;
-
-
-
